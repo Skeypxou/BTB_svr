@@ -133,3 +133,41 @@ def add_teacher(first_name, last_name, phone, email, subject_id, diploma, hire_d
 def delete_teacher(teacher_id):
     """Supprime un enseignant de la base de données."""
     execute_query("DELETE FROM teachers WHERE id = ?", (teacher_id,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_all_school_years():
+    """Récupère toutes les années scolaires triées par nom."""
+    return fetch_query("SELECT id, name, is_active, is_closed FROM school_years ORDER BY name DESC")
+
+def get_active_school_year():
+    """Récupère l'année scolaire actuellement active."""
+    result = fetch_query("SELECT id, name FROM school_years WHERE is_active = 1")
+    return result[0] if result else None
+
+def add_school_year(name):
+    """Ajoute une nouvelle année scolaire."""
+    # Vérifier si elle existe déjà
+    existing = fetch_query("SELECT id FROM school_years WHERE name = ?", (name,))
+    if existing:
+        return None
+    return execute_query("INSERT INTO school_years (name, is_active, is_closed) VALUES (?, 0, 0)", (name,))
+
+def set_active_school_year(year_id):
+    """Définit une année comme active et désactive toutes les autres."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        # 1. Désactiver toutes les années
+        cursor.execute("UPDATE school_years SET is_active = 0")
+        # 2. Activer l'année choisie
+        cursor.execute("UPDATE school_years SET is_active = 1 WHERE id = ?", (year_id,))
+        # 3. Mettre à jour les paramètres de l'école
+        cursor.execute("UPDATE school_settings SET active_year_id = ?", (year_id,))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Erreur lors du changement d'année active: {e}")
+        conn.rollback()
+        return False
+    finally:
+        conn.close()
