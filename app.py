@@ -73,6 +73,11 @@ def main_sidebar():
             menu_options.append("👥 Élèves")
             menu_options.append("👨‍👩‍👦 Parents")
             menu_options.append("👨‍🏫 Enseignants")
+        if user_role in ['Administrateur', 'Secrétaire', 'Directeur']:
+            menu_options.append("👥 Élèves")
+            menu_options.append("👨‍👩‍👦 Parents")
+            menu_options.append("👨‍🏫 Enseignants")
+            menu_options.append("📋 Inscriptions") # <-- AJOUTE CECI
             
         # 2. Années Scolaires et Paramètres Académiques
         if user_role in ['Administrateur', 'Directeur']:
