@@ -82,6 +82,9 @@ def main_sidebar():
             menu_options.append("⚙️ Paramètres Académiques")   
         if user_role in ['Administrateur', 'Directeur', 'Enseignant']:
             menu_options.append("📝 Notes & Évaluations")
+        if user_role in ['Administrateur', 'Directeur', 'Secrétaire', 'Enseignant']:
+            menu_options.append("📝 Notes & Évaluations")
+            menu_options.append("🚪 Absences & Retards")
         if user_role in ['Administrateur', 'Comptable', 'Directeur']:
             menu_options.append("💰 Finances")
             
