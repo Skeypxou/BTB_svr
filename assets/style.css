@@ -1,0 +1,49 @@
+/* --- LNS SCHOOL PRO ENTERPRISE - THEME PREMIUM --- */
+
+/* Police d'écriture globale */
+body, div, p, span, input, button {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+}
+
+/* Sidebar (Menu de gauche) */
+section[data-testid="stSidebar"] {
+    background-color: #0f172a !important; /* Bleu nuit très foncé */
+    color: white !important;
+}
+
+/* Liens de navigation dans la sidebar */
+section[data-testid="stSidebar"] .stRadio label, 
+section[data-testid="stSidebar"] .stButton button {
+    color: #cbd5e1 !important;
+}
+
+/* Cartes statistiques (KPIs) */
+div.stMetric {
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Titres principaux */
+h1, h2, h3 {
+    color: #1e293b !important;
+    font-weight: 600 !important;
+}
+
+/* Boutons d'action principaux */
+.stButton > button {
+    background-color: #2563eb !important; /* Bleu royal */
+    color: white !important;
+    border-radius: 8px !important;
+    border: none !important;
+    font-weight: 500 !important;
+}
+
+/* Boutons au survol */
+.stButton > button:hover {
+    background-color: #1d4ed8 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
