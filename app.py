@@ -65,29 +65,30 @@ def main_sidebar():
         st.caption(f"Connecté en tant que : **{user_role}**")
         st.divider()
         
-        # Menu de navigation simplifié pour l'instant
+        # Menu de navigation de base
         menu_options = ["📊 Tableau de Bord"]
         
-        # On ajoute des options selon le rôle (exemple simple)
+        # 1. Élèves, Parents, Enseignants
         if user_role in ['Administrateur', 'Secrétaire', 'Directeur']:
             menu_options.append("👥 Élèves")
             menu_options.append("👨‍👩‍👦 Parents")
             menu_options.append("👨‍🏫 Enseignants")
             
-        # CORRECTION ICI : Le 'if' doit être aligné avec le 'if' du dessus
-        if user_role in ['Administrateur', 'Directeur']:
-            menu_options.append("📅 Années Scolaires")
+        # 2. Années Scolaires et Paramètres Académiques
         if user_role in ['Administrateur', 'Directeur']:
             menu_options.append("📅 Années Scolaires")
             menu_options.append("⚙️ Paramètres Académiques")   
-        if user_role in ['Administrateur', 'Directeur', 'Enseignant']:
-            menu_options.append("📝 Notes & Évaluations")
+            
+        # 3. Notes et Absences
         if user_role in ['Administrateur', 'Directeur', 'Secrétaire', 'Enseignant']:
             menu_options.append("📝 Notes & Évaluations")
             menu_options.append("🚪 Absences & Retards")
-        if user_role in ['Administrateur', 'Comptable', 'Directeur']:
+            
+        # 4. Finances
+        if user_role in ['Administrateur', 'Directeur', 'Comptable']:
             menu_options.append("💰 Finances")
             
+        # Options globales
         menu_options.append("⚙️ Paramètres")
         menu_options.append("🚪 Déconnexion")
         
@@ -97,8 +98,6 @@ def main_sidebar():
             st.session_state.logged_in = False
             st.session_state.user_info = None
             st.rerun()
-            
-        return choice
             
         return choice
 
