@@ -137,3 +137,6 @@ else:
         
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les paramètres de l'école et du système.")
+    elif choice == "📝 Notes & Évaluations":
+        from modules.grades import show_grades
+        show_grades()
