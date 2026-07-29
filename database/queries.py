@@ -67,3 +67,32 @@ def add_student(first_name, last_name, dob, gender, address, phone, photo_filena
 def delete_student(student_id):
     """Supprime un élève de la base de données."""
     execute_query("DELETE FROM students WHERE id = ?", (student_id,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_all_parents_with_children_count(search_term=""):
+    """Récupère tous les parents et compte combien d'enfants each parent a."""
+    query = """
+        SELECT p.id, p.first_name, p.last_name, p.phone, p.email, p.profession,
+               (SELECT COUNT(sp.id) FROM student_parents sp WHERE sp.parent_id = p.id) as children_count
+        FROM parents p
+    """
+    if search_term:
+        query += " WHERE p.first_name LIKE ? OR p.last_name LIKE ? OR p.phone LIKE ?"
+        params = (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%")
+        return fetch_query(query, params)
+    return fetch_query(query)
+
+def add_parent(first_name, last_name, phone, email, address, profession):
+    """Ajoute un nouveau parent dans la base de données."""
+    query = """
+        INSERT INTO parents (first_name, last_name, phone, email, address, profession)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """
+    return execute_query(query, (first_name, last_name, phone, email, address, profession))
+
+def delete_parent(parent_id):
+    """Supprime un parent. (Attention, s'il a des enfants liés, il faudra gérer cette contrainte)."""
+    # On supprime d'abord les liens avec les enfants pour ne pas casser la base
+    execute_query("DELETE FROM student_parents WHERE parent_id = ?", (parent_id,))
+    # Puis on supprime le parent
+    execute_query("DELETE FROM parents WHERE id = ?", (parent_id,))
