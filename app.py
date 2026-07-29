@@ -1,0 +1,110 @@
+# app.py
+import streamlit as st
+import os
+from pathlib import Path
+from utils.auth import verify_user
+from database.create_database import create_tables, seed_default_data
+
+# --- 1. INITIALISATION DE LA BASE DE DONNÉES ---
+# On s'assure que la base existe avant de lancer l'application
+if not os.path.exists("database/school.db"):
+    create_tables()
+    seed_default_data()
+
+# --- 2. CONFIGURATION DE LA PAGE STREAMLIT ---
+st.set_page_config(
+    page_title="LNS SCHOOL PRO ENTERPRISE",
+    page_icon="🏫",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- 3. INJECTION DU CSS PREMIUM ---
+def load_css():
+    css_path = Path("assets/style.css")
+    if css_path.exists():
+        with open(css_path) as f:
+            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+load_css()
+
+# --- 4. GESTION DE L'ÉTAT DE CONNEXION (SESSION STATE) ---
+# Streamlit recharge la page à chaque clic. On utilise session_state pour garder l'utilisateur connecté.
+if 'logged_in' not in st.session_state:
+    st.session_state.logged_in = False
+if 'user_info' not in st.session_state:
+    st.session_state.user_info = None
+
+# --- 5. PAGE DE CONNEXION ---
+def login_page():
+    st.markdown("<h1 style='text-align: center; color: #1e293b;'>🏫 LNS SCHOOL PRO ENTERPRISE</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #64748b;'>Veuillez vous connecter pour accéder au système</p>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        with st.form("login_form"):
+            username = st.text_input("Identifiant")
+            password = st.text_input("Mot de passe", type="password")
+            submit = st.form_submit_button("Se connecter", use_container_width=True)
+            
+            if submit:
+                user = verify_user(username, password)
+                if user:
+                    st.session_state.logged_in = True
+                    st.session_state.user_info = user
+                    st.rerun() # Recharge la page pour afficher le dashboard
+                else:
+                    st.error("Identifiant ou mot de passe incorrect.")
+
+# --- 6. BARRE DE NAVIGATION (SIDEBAR) ---
+def main_sidebar():
+    user_role = st.session_state.user_info['role_name']
+    
+    with st.sidebar:
+        st.markdown("### 🏫 LNS SCHOOL PRO")
+        st.caption(f"Connecté en tant que : **{user_role}**")
+        st.divider()
+        
+        # Menu de navigation simplifié pour l'instant
+        menu_options = ["📊 Tableau de Bord"]
+        
+        # On ajoute des options selon le rôle (exemple simple)
+        if user_role in ['Administrateur', 'Secrétaire', 'Directeur']:
+            menu_options.append("👥 Élèves")
+            menu_options.append("👨‍👩‍👦 Parents")
+            menu_options.append("👨‍🏫 Enseignants")
+            
+        if user_role in ['Administrateur', 'Comptable', 'Directeur']:
+            menu_options.append("💰 Finances")
+            
+        menu_options.append("⚙️ Paramètres")
+        menu_options.append("🚪 Déconnexion")
+        
+        choice = st.radio("Navigation", menu_options)
+        
+        if choice == "🚪 Déconnexion":
+            st.session_state.logged_in = False
+            st.session_state.user_info = None
+            st.rerun()
+            
+        return choice
+
+# --- 7. BOUCLE PRINCIPALE ---
+if not st.session_state.logged_in:
+    login_page()
+else:
+    choice = main_sidebar()
+    
+    # Routage vers les modules
+    if choice == "📊 Tableau de Bord":
+        # On importe le module seulement quand on en a besoin (accélère le démarrage)
+        from modules.dashboard import show_dashboard
+        show_dashboard()
+        
+    elif choice == "👥 Élèves":
+        st.warning("Module en cours de développement (Étape 6).")
+        
+    # (Les autres modules seront ajoutés au fur et à mesure)
+    
+    elif choice == "⚙️ Paramètres":
+        st.info("Ici se trouveront les paramètres de l'école et du système.")
