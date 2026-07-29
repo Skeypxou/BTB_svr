@@ -162,3 +162,7 @@ else:
         
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les paramètres de l'école et du système.")
+    
+    elif choice == "💾 Sauvegarde & Restauration":
+        from modules.backup import show_backup
+        show_backup()
