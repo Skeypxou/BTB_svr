@@ -74,10 +74,11 @@ def main_sidebar():
             menu_options.append("👨‍🏫 Enseignants")
             menu_options.append("📋 Inscriptions")
             
-        # 2. Notes et Absences
+        # 2. Notes, Absences et Bulletins
         if user_role in ['Administrateur', 'Directeur', 'Secrétaire', 'Enseignant']:
             menu_options.append("📝 Notes & Évaluations")
             menu_options.append("🚪 Absences & Retards")
+            menu_options.append("📄 Bulletins PDF") # <-- AJOUTÉ ICI
             
         # 3. Finances
         if user_role in ['Administrateur', 'Directeur', 'Comptable']:
@@ -105,7 +106,6 @@ def main_sidebar():
             st.rerun()
             
         return choice
-
 # --- 7. BOUCLE PRINCIPALE (LE ROUTEUR) ---
 # Si l'utilisateur n'est PAS connecté, on affiche la page de connexion
 if not st.session_state.logged_in:
