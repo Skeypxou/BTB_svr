@@ -205,6 +205,88 @@ def get_all_classes_with_levels():
         ORDER BY c.name
     """
     return fetch_query(query)
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_students_by_class(class_id):
+    """Récupère les élèves inscrits dans une classe spécifique pour l'année active."""
+    query = """
+        SELECT s.id, s.matricule, s.first_name, s.last_name 
+        FROM students s
+        JOIN enrollments e ON s.id = e.student_id
+        WHERE e.class_id = ? AND e.school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        ORDER BY s.last_name, s.first_name
+    """
+    return fetch_query(query, (class_id,))
+
+def save_grade(student_id, subject_id, eval_type_id, score, max_score, trimester):
+    """Enregistre ou met à jour une note pour un élève."""
+    active_year = fetch_query("SELECT id FROM school_years WHERE is_active = 1")[0]
+    # On vérifie si la note existe déjà pour cet élève, matière, type et trimestre
+    existing = fetch_query("""
+        SELECT id FROM grades 
+        WHERE student_id = ? AND subject_id = ? AND evaluation_type_id = ? AND trimester = ? AND school_year_id = ?
+    """, (student_id, subject_id, eval_type_id, trimester, active_year['id']))
+    
+    if existing:
+        # Mise à jour
+        query = """
+            UPDATE grades SET score = ?, max_score = ?
+            WHERE id = ?
+        """
+        execute_query(query, (score, max_score, existing[0]['id']))
+    else:
+        # Insertion
+        query = """
+            INSERT INTO grades (student_id, subject_id, evaluation_type_id, score, max_score, trimester, school_year_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """
+        execute_query(query, (student_id, subject_id, eval_type_id, score, max_score, trimester, active_year['id']))
+
+def calculate_class_rankings(class_id, trimester):
+    """Calcule la moyenne générale de chaque élève de la classe et établit le classement."""
+    students = get_students_by_class(class_id)
+    if not students:
+        return []
+        
+    active_year_id = fetch_query("SELECT id FROM school_years WHERE is_active = 1")[0]['id']
+    rankings = []
+    
+    for student in students:
+        # Récupérer toutes les notes de l'élève pour ce trimestre
+        grades = fetch_query("""
+            SELECT g.score, g.max_score, s.coefficient
+            FROM grades g
+            JOIN subjects s ON g.subject_id = s.id
+            WHERE g.student_id = ? AND g.trimester = ? AND g.school_year_id = ?
+        """, (student['id'], trimester, active_year_id))
+        
+        total_points = 0
+        total_coefficients = 0
+        
+        for grade in grades:
+            if grade['max_score'] > 0:
+                # Moyenne de la matière sur 20
+                subject_avg = (grade['score'] / grade['max_score']) * 20
+                total_points += subject_avg * grade['coefficient']
+                total_coefficients += grade['coefficient']
+        
+        general_avg = (total_points / total_coefficients) if total_coefficients > 0 else 0
+        
+        rankings.append({
+            'student_id': student['id'],
+            'matricule': student['matricule'],
+            'name': f"{student['last_name']} {student['first_name']}",
+            'average': round(general_avg, 2)
+        })
+        
+    # Trier par moyenne décroissante
+    rankings.sort(key=lambda x: x['average'], reverse=True)
+    
+    # Ajouter le rang
+    for i, rank in enumerate(rankings):
+        rank['rank'] = i + 1
+        
+    return rankings
 
 def delete_class(class_id):
     return execute_query("DELETE FROM classes WHERE id = ?", (class_id,))
