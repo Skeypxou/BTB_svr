@@ -421,3 +421,17 @@ def update_school_settings(name, address, phone, email, website, director_name, 
         return False
     finally:
         conn.close()
+        # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_student_grades_for_bulletin(student_id, trimester):
+    """Récupère les notes d'un élève pour un trimestre, regroupées par matière."""
+    query = """
+        SELECT s.name as subject_name, s.coefficient, 
+               et.name as eval_type, g.score, g.max_score
+        FROM grades g
+        JOIN subjects s ON g.subject_id = s.id
+        JOIN evaluation_types et ON g.evaluation_type_id = et.id
+        WHERE g.student_id = ? AND g.trimester = ? AND g.school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        ORDER BY s.name
+    """
+    return fetch_query(query, (student_id, trimester))
