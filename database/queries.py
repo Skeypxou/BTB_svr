@@ -388,3 +388,36 @@ def get_all_payments():
     """
     active_year = get_active_year_id()
     return fetch_query(query, (active_year,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_school_settings():
+    """Récupère les paramètres de l'école. Retourne un dict ou None si non configuré."""
+    result = fetch_query("SELECT name, logo_path, address, phone, email, website, director_name FROM school_settings WHERE id = 1")
+    return result[0] if result else None
+
+def update_school_settings(name, address, phone, email, website, director_name, logo_filename=None):
+    """Met à jour les paramètres de l'école. Gère l'upload du logo séparément."""
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        if logo_filename:
+            query = """
+                UPDATE school_settings 
+                SET name = ?, address = ?, phone = ?, email = ?, website = ?, director_name = ?, logo_path = ?
+                WHERE id = 1
+            """
+            cursor.execute(query, (name, address, phone, email, website, director_name, logo_filename))
+        else:
+            query = """
+                UPDATE school_settings 
+                SET name = ?, address = ?, phone = ?, email = ?, website = ?, director_name = ?
+                WHERE id = 1
+            """
+            cursor.execute(query, (name, address, phone, email, website, director_name))
+        conn.commit()
+        return True
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour des paramètres: {e}")
+        return False
+    finally:
+        conn.close()
