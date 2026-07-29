@@ -97,15 +97,23 @@ else:
     
     # Routage vers les modules
     if choice == "📊 Tableau de Bord":
-        # On importe le module seulement quand on en a besoin (accélère le démarrage)
         from modules.dashboard import show_dashboard
         show_dashboard()
         
     elif choice == "👥 Élèves":
-               from modules.students import show_students
+        from modules.students import show_students
         show_students()
         
-    # (Les autres modules seront ajoutés au fur et à mesure)
-    
+    elif choice == "👨‍👩‍👦 Parents":
+        from modules.parents import show_parents
+        show_parents()
+        
+    elif choice == "👨‍🏫 Enseignants":
+        from modules.teachers import show_teachers
+        show_teachers()
+        
+    elif choice == "💰 Finances":
+        st.warning("Module Finances en cours de développement.")
+        
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les paramètres de l'école et du système.")
