@@ -130,6 +130,7 @@ else:
     elif choice == "👨‍🏫 Enseignants":
         from modules.teachers import show_teachers
         show_teachers()
+        
     elif choice == "📋 Inscriptions":
         from modules.enrollments import show_enrollments
         show_enrollments()
@@ -154,9 +155,13 @@ else:
         from modules.academic_settings import show_academic_settings
         show_academic_settings()
         
-    elif choice == "⚙️ Paramètres":
-        st.info("Ici se trouveront les paramètres de l'école et du système.")
-    
     elif choice == "💾 Sauvegarde & Restauration":
         from modules.backup import show_backup
         show_backup()
+        
+    elif choice == "🏫 Paramètres École":
+        from modules.school_settings import show_school_settings
+        show_school_settings()
+        
+    elif choice == "⚙️ Paramètres":
+        st.info("Ici se trouveront les autres paramètres du système.")
