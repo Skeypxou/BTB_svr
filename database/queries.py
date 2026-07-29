@@ -334,3 +334,57 @@ def get_attendance_by_student(student_id):
         ORDER BY date DESC
     """
     return fetch_query(query, (student_id,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_active_year_id():
+    """Retourne l'ID de l'année scolaire active."""
+    result = fetch_query("SELECT id FROM school_years WHERE is_active = 1")
+    return result[0]['id'] if result else None
+
+# --- FRAIS SCOLAIRES ---
+def add_school_fee(name, amount):
+    """Ajoute un type de frais pour l'année active."""
+    active_year = get_active_year_id()
+    return execute_query("INSERT INTO school_fees (name, amount, school_year_id) VALUES (?, ?, ?)", 
+                         (name, amount, active_year))
+
+def get_all_school_fees():
+    """Récupère tous les types de frais de l'année active."""
+    active_year = get_active_year_id()
+    return fetch_query("SELECT id, name, amount FROM school_fees WHERE school_year_id = ?", (active_year,))
+
+# --- PAIEMENTS ---
+def record_payment(student_id, fee_id, amount_paid, method, status):
+    """Enregistre un nouveau paiement."""
+    active_year = get_active_year_id()
+    query = """
+        INSERT INTO payments (student_id, fee_id, amount_paid, payment_date, method, status, school_year_id)
+        VALUES (?, ?, ?, DATE('now'), ?, ?, ?)
+    """
+    return execute_query(query, (student_id, fee_id, amount_paid, method, status, active_year))
+
+def get_payments_by_student(student_id):
+    """Récupère l'historique des paiements d'un élève."""
+    query = """
+        SELECT p.payment_date, sf.name as fee_name, p.amount_paid, p.method, p.status
+        FROM payments p
+        JOIN school_fees sf ON p.fee_id = sf.id
+        WHERE p.student_id = ? AND p.school_year_id = ?
+        ORDER BY p.payment_date DESC
+    """
+    active_year = get_active_year_id()
+    return fetch_query(query, (student_id, active_year))
+
+def get_all_payments():
+    """Récupère tous les paiements de l'année active pour le rapport global."""
+    query = """
+        SELECT p.payment_date, s.matricule, s.last_name || ' ' || s.first_name as student_name, 
+               sf.name as fee_name, p.amount_paid, p.method, p.status
+        FROM payments p
+        JOIN students s ON p.student_id = s.id
+        JOIN school_fees sf ON p.fee_id = sf.id
+        WHERE p.school_year_id = ?
+        ORDER BY p.payment_date DESC
+    """
+    active_year = get_active_year_id()
+    return fetch_query(query, (active_year,))
