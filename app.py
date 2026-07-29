@@ -126,6 +126,18 @@ else:
         from modules.teachers import show_teachers
         show_teachers()
         
+    elif choice == "📝 Notes & Évaluations":
+        from modules.grades import show_grades
+        show_grades()
+        
+    elif choice == "🚪 Absences & Retards":
+        from modules.attendance import show_attendance
+        show_attendance()
+        
+    elif choice == "💰 Finances":
+        from modules.finances import show_finances
+        show_finances()
+        
     elif choice == "📅 Années Scolaires":
         from modules.school_years import show_school_years
         show_school_years()
@@ -134,14 +146,5 @@ else:
         from modules.academic_settings import show_academic_settings
         show_academic_settings()
         
-    elif choice == "💰 Finances":
-        st.warning("Module Finances en cours de développement.")
-        
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les paramètres de l'école et du système.")
-    elif choice == "📝 Notes & Évaluations":
-        from modules.grades import show_grades
-        show_grades()
-    elif choice == "🚪 Absences & Retards":
-        from modules.attendance import show_attendance
-        show_attendance()
