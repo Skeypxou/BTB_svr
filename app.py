@@ -102,7 +102,8 @@ else:
         show_dashboard()
         
     elif choice == "👥 Élèves":
-        st.warning("Module en cours de développement (Étape 6).")
+               from modules.students import show_students
+        show_students()
         
     # (Les autres modules seront ajoutés au fur et à mesure)
     
