@@ -96,3 +96,40 @@ def delete_parent(parent_id):
     execute_query("DELETE FROM student_parents WHERE parent_id = ?", (parent_id,))
     # Puis on supprime le parent
     execute_query("DELETE FROM parents WHERE id = ?", (parent_id,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def generate_teacher_matricule():
+    """Génère un matricule automatique unique pour un enseignant (ex: ENS-001)."""
+    count = fetch_query("SELECT COUNT(id) as count FROM teachers")[0]['count']
+    return f"ENS-{count + 1:03d}"
+
+def get_all_teachers(search_term=""):
+    """Récupère tous les enseignants avec le nom de leur matière."""
+    query = """
+        SELECT t.id, t.matricule, t.first_name, t.last_name, t.phone, t.email, 
+               t.diploma, t.hire_date, t.salary, s.name as subject_name
+        FROM teachers t
+        LEFT JOIN subjects s ON t.subject_id = s.id
+    """
+    if search_term:
+        query += " WHERE t.first_name LIKE ? OR t.last_name LIKE ? OR t.matricule LIKE ?"
+        params = (f"%{search_term}%", f"%{search_term}%", f"%{search_term}%")
+        return fetch_query(query, params)
+    return fetch_query(query)
+
+def get_all_subjects():
+    """Récupère la liste des matières pour le menu déroulant."""
+    return fetch_query("SELECT id, name FROM subjects WHERE is_active = 1 ORDER BY name")
+
+def add_teacher(first_name, last_name, phone, email, subject_id, diploma, hire_date, salary):
+    """Ajoute un nouvel enseignant dans la base de données."""
+    matricule = generate_teacher_matricule()
+    query = """
+        INSERT INTO teachers (matricule, first_name, last_name, phone, email, subject_id, diploma, hire_date, salary)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """
+    return execute_query(query, (matricule, first_name, last_name, phone, email, subject_id, diploma, hire_date, salary))
+
+def delete_teacher(teacher_id):
+    """Supprime un enseignant de la base de données."""
+    execute_query("DELETE FROM teachers WHERE id = ?", (teacher_id,))
