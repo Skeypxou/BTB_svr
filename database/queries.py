@@ -171,3 +171,50 @@ def set_active_school_year(year_id):
         return False
     finally:
         conn.close()
+        # --- AJOUTER À LA FIN DE database/queries.py ---
+
+# --- MATIERES ---
+def add_subject(name, coefficient):
+    return execute_query("INSERT INTO subjects (name, coefficient, is_active) VALUES (?, ?, 1)", (name, coefficient))
+
+def get_all_subjects():
+    return fetch_query("SELECT id, name, coefficient, is_active FROM subjects ORDER BY name")
+
+def delete_subject(subject_id):
+    return execute_query("DELETE FROM subjects WHERE id = ?", (subject_id,))
+
+# --- NIVEAUX ---
+def add_level(name):
+    return execute_query("INSERT INTO levels (name) VALUES (?)", (name,))
+
+def get_all_levels():
+    return fetch_query("SELECT id, name FROM levels ORDER BY name")
+
+def delete_level(level_id):
+    return execute_query("DELETE FROM levels WHERE id = ?", (level_id,))
+
+# --- CLASSES ---
+def add_class(name, level_id, capacity):
+    return execute_query("INSERT INTO classes (name, level_id, capacity) VALUES (?, ?, ?)", (name, level_id, capacity))
+
+def get_all_classes_with_levels():
+    query = """
+        SELECT c.id, c.name, l.name as level_name, c.capacity 
+        FROM classes c
+        LEFT JOIN levels l ON c.level_id = l.id
+        ORDER BY c.name
+    """
+    return fetch_query(query)
+
+def delete_class(class_id):
+    return execute_query("DELETE FROM classes WHERE id = ?", (class_id,))
+
+# --- TYPES D'EVALUATION ---
+def add_evaluation_type(name):
+    return execute_query("INSERT INTO evaluation_types (name) VALUES (?)", (name,))
+
+def get_all_evaluation_types():
+    return fetch_query("SELECT id, name FROM evaluation_types ORDER BY name")
+
+def delete_evaluation_type(eval_id):
+    return execute_query("DELETE FROM evaluation_types WHERE id = ?", (eval_id,))
