@@ -300,3 +300,37 @@ def get_all_evaluation_types():
 
 def delete_evaluation_type(eval_id):
     return execute_query("DELETE FROM evaluation_types WHERE id = ?", (eval_id,))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def save_attendance(student_id, date, status, is_justified, reason):
+    """Enregistre une absence ou un retard pour un élève."""
+    active_year = fetch_query("SELECT id FROM school_years WHERE is_active = 1")[0]
+    query = """
+        INSERT INTO attendance (student_id, date, status, is_justified, reason, school_year_id)
+        VALUES (?, ?, ?, ?, ?, ?)
+    """
+    # Convertir le booléen en entier pour SQLite (0 ou 1)
+    justified_int = 1 if is_justified else 0
+    return execute_query(query, (student_id, date, status, justified_int, reason, active_year['id']))
+
+def get_attendance_by_class(class_id, date):
+    """Récupère les absences d'une classe à une date précise."""
+    query = """
+        SELECT a.id, s.matricule, s.first_name, s.last_name, a.status, a.is_justified, a.reason
+        FROM attendance a
+        JOIN students s ON a.student_id = s.id
+        JOIN enrollments e ON s.id = e.student_id
+        WHERE e.class_id = ? AND a.date = ? AND a.school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        ORDER BY s.last_name
+    """
+    return fetch_query(query, (class_id, date))
+
+def get_attendance_by_student(student_id):
+    """Récupère tout l'historique des absences d'un élève pour l'année en cours."""
+    query = """
+        SELECT date, status, is_justified, reason
+        FROM attendance
+        WHERE student_id = ? AND school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        ORDER BY date DESC
+    """
+    return fetch_query(query, (student_id,))
