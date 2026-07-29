@@ -126,6 +126,10 @@ else:
         from modules.school_years import show_school_years
         show_school_years()
         
+    elif choice == "⚙️ Paramètres Académiques":
+        from modules.academic_settings import show_academic_settings
+        show_academic_settings()
+        
     elif choice == "💰 Finances":
         st.warning("Module Finances en cours de développement.")
         
