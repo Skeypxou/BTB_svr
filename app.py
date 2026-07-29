@@ -55,7 +55,6 @@ def login_page():
                     st.rerun() # Recharge la page pour afficher le dashboard
                 else:
                     st.error("Identifiant ou mot de passe incorrect.")
-
 # --- 6. BARRE DE NAVIGATION (SIDEBAR) ---
 def main_sidebar():
     user_role = st.session_state.user_info['role_name']
@@ -68,38 +67,33 @@ def main_sidebar():
         # Menu de navigation de base
         menu_options = ["📊 Tableau de Bord"]
         
-        # 1. Élèves, Parents, Enseignants
+        # 1. Élèves, Parents, Enseignants & Inscriptions
         if user_role in ['Administrateur', 'Secrétaire', 'Directeur']:
             menu_options.append("👥 Élèves")
             menu_options.append("👨‍👩‍👦 Parents")
             menu_options.append("👨‍🏫 Enseignants")
-        if user_role in ['Administrateur', 'Secrétaire', 'Directeur']:
-            menu_options.append("👥 Élèves")
-            menu_options.append("👨‍👩‍👦 Parents")
-            menu_options.append("👨‍🏫 Enseignants")
-            menu_options.append("📋 Inscriptions") # <-- AJOUTE CECI
+            menu_options.append("📋 Inscriptions")
             
-        # 2. Années Scolaires et Paramètres Académiques
-        if user_role in ['Administrateur', 'Directeur']:
-            menu_options.append("📅 Années Scolaires")
-            menu_options.append("⚙️ Paramètres Académiques")   
-            
-        # 3. Notes et Absences
+        # 2. Notes et Absences
         if user_role in ['Administrateur', 'Directeur', 'Secrétaire', 'Enseignant']:
             menu_options.append("📝 Notes & Évaluations")
             menu_options.append("🚪 Absences & Retards")
             
-        # 4. Finances
+        # 3. Finances
         if user_role in ['Administrateur', 'Directeur', 'Comptable']:
             menu_options.append("💰 Finances")
             
-        # Options globales
+        # 4. Années Scolaires et Paramètres Académiques
         if user_role in ['Administrateur', 'Directeur']:
             menu_options.append("📅 Années Scolaires")
             menu_options.append("⚙️ Paramètres Académiques")
             
+        # 5. Système (Admin only)
         if user_role == 'Administrateur':
             menu_options.append("💾 Sauvegarde & Restauration")
+            menu_options.append("🏫 Paramètres École")
+            
+        # Options globales
         menu_options.append("⚙️ Paramètres")
         menu_options.append("🚪 Déconnexion")
         
