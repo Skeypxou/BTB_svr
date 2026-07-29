@@ -94,6 +94,12 @@ def main_sidebar():
             menu_options.append("💰 Finances")
             
         # Options globales
+        if user_role in ['Administrateur', 'Directeur']:
+            menu_options.append("📅 Années Scolaires")
+            menu_options.append("⚙️ Paramètres Académiques")
+            
+        if user_role == 'Administrateur':
+            menu_options.append("💾 Sauvegarde & Restauration")
         menu_options.append("⚙️ Paramètres")
         menu_options.append("🚪 Déconnexion")
         
