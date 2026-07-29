@@ -1,0 +1,19 @@
+# Base de données et sauvegardes
+database/school.db
+backups/
+json_backups/
+archives/
+
+# Fichiers générés et uploads
+photos/
+documents/
+*.pdf
+
+# Environnements virtuels
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Secrets et configurations locales
+.env
