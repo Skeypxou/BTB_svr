@@ -130,6 +130,9 @@ else:
     elif choice == "👨‍🏫 Enseignants":
         from modules.teachers import show_teachers
         show_teachers()
+    elif choice == "📋 Inscriptions":
+        from modules.enrollments import show_enrollments
+        show_enrollments()
         
     elif choice == "📝 Notes & Évaluations":
         from modules.grades import show_grades
