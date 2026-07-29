@@ -143,3 +143,6 @@ else:
     elif choice == "📝 Notes & Évaluations":
         from modules.grades import show_grades
         show_grades()
+    elif choice == "🚪 Absences & Retards":
+        from modules.attendance import show_attendance
+        show_attendance()
