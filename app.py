@@ -74,6 +74,10 @@ def main_sidebar():
             menu_options.append("👨‍👩‍👦 Parents")
             menu_options.append("👨‍🏫 Enseignants")
             
+        # CORRECTION ICI : Le 'if' doit être aligné avec le 'if' du dessus
+        if user_role in ['Administrateur', 'Directeur']:
+            menu_options.append("📅 Années Scolaires")
+            
         if user_role in ['Administrateur', 'Comptable', 'Directeur']:
             menu_options.append("💰 Finances")
             
@@ -88,14 +92,18 @@ def main_sidebar():
             st.rerun()
             
         return choice
+            
+        return choice
 
-# --- 7. BOUCLE PRINCIPALE ---
+# --- 7. BOUCLE PRINCIPALE (LE ROUTEUR) ---
+# Si l'utilisateur n'est PAS connecté, on affiche la page de connexion
 if not st.session_state.logged_in:
     login_page()
+# Sinon, on affiche le menu et la page demandée
 else:
     choice = main_sidebar()
     
-    # Routage vers les modules
+    # Routage vers les modules en fonction du choix (choice) dans la sidebar
     if choice == "📊 Tableau de Bord":
         from modules.dashboard import show_dashboard
         show_dashboard()
@@ -111,6 +119,10 @@ else:
     elif choice == "👨‍🏫 Enseignants":
         from modules.teachers import show_teachers
         show_teachers()
+        
+    elif choice == "📅 Années Scolaires":
+        from modules.school_years import show_school_years
+        show_school_years()
         
     elif choice == "💰 Finances":
         st.warning("Module Finances en cours de développement.")
