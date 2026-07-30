@@ -93,7 +93,7 @@ def show_grades():
                 
                 # Mettre en surbrillance le premier
                 st.dataframe(
-                    df[['Rang', 'Matricule', 'Nom de l'élève', 'Moyenne (/20)']], 
+                    df[['Rang', 'Matricule', "Nom de l'élève", 'Moyenne (/20)']],  
                     use_container_width=True, 
                     hide_index=True
                 )
