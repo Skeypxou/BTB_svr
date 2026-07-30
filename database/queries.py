@@ -480,3 +480,16 @@ def get_payment_details(payment_id):
     """
     result = fetch_query(query, (payment_id,))
     return result[0] if result else None
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_student_for_card(student_id):
+    """Récupère les infos d'un élève pour générer sa carte scolaire."""
+    query = """
+        SELECT s.first_name, s.last_name, s.matricule, s.photo_path, c.name as class_name
+        FROM students s
+        JOIN enrollments e ON s.id = e.student_id AND e.school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        JOIN classes c ON e.class_id = c.id
+        WHERE s.id = ?
+    """
+    result = fetch_query(query, (student_id,))
+    return result[0] if result else None
