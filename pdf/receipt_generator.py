@@ -18,8 +18,8 @@ def generate_receipt_pdf(payment):
     
     styles = getSampleStyleSheet()
     title_style = ParagraphStyle('CustomTitle', parent=styles['Title'], fontSize=16, textColor=colors.HexColor('#1e293b'), alignment=CENTER)
-    normal_style = styles['Normal']
-    right_style = ParagraphStyle('Right', parent=normal_style, alignment=RIGHT)
+    title_style = ParagraphStyle('CustomTitle', parent=styles['Title'], fontSize=16, textColor=colors.HexColor('#1e293b'), alignment=TA_CENTER)
+    right_style = ParagraphStyle('Right', parent=normal_style, alignment=TA_RIGHT)
     
     elements = []
     settings = get_school_settings()
