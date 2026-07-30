@@ -162,6 +162,10 @@ else:
         from modules.finances import show_finances
         show_finances()
         
+    elif choice == "🧾 Reçus de Paiement":
+        from modules.receipts import show_receipts
+        show_receipts()
+        
     elif choice == "📅 Années Scolaires":
         from modules.school_years import show_school_years
         show_school_years()
