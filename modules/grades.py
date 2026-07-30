@@ -89,7 +89,7 @@ def show_grades():
             
             if rankings:
                 df = pd.DataFrame(rankings)
-                df = df.rename(columns={'rank': 'Rang', 'matricule': 'Matricule', 'name': 'Nom de l'élève', 'average': 'Moyenne (/20)'})
+                df = df.rename(columns={'rank': 'Rang', 'matricule': 'Matricule', 'name': "Nom de l'élève", 'average': 'Moyenne (/20)'})
                 
                 # Mettre en surbrillance le premier
                 st.dataframe(
