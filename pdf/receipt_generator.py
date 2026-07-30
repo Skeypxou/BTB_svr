@@ -4,7 +4,7 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import mm
 from reportlab.lib import colors
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, Table, TableStyle
-from reportlab.lib.enums import CENTER, RIGHT
+from reportlab.lib.enums import TA_CENTER, TA_RIGHT
 from pathlib import Path
 from database.queries import get_school_settings
 import io
