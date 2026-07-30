@@ -577,3 +577,35 @@ def promote_students(class_mapping, new_year_id):
                 promoted_count += 1
                 
     return promoted_count
+    def create_enrollment(student_id, class_id):
+    """Crée une demande d'inscription (Préinscription) pour l'année active."""
+    active_year = get_active_year_id()
+    existing = fetch_query("SELECT id FROM enrollments WHERE student_id = ? AND class_id = ? AND school_year_id = ?", 
+                           (student_id, class_id, active_year))
+    if existing:
+        return None
+    return execute_query("INSERT INTO enrollments (student_id, class_id, date, status, school_year_id) VALUES (?, ?, DATE('now'), 'En attente', ?)", 
+                         (student_id, class_id, active_year))
+
+def get_enrollments_by_status(status_filter=None):
+    """Récupère les inscriptions. Si status_filter est None, récupère tout."""
+    active_year = get_active_year_id()
+    query = """
+        SELECT e.id, s.matricule, s.first_name, s.last_name, c.name as class_name, e.date, e.status
+        FROM enrollments e
+        JOIN students s ON e.student_id = s.id
+        JOIN classes c ON e.class_id = c.id
+        WHERE e.school_year_id = ?
+    """
+    params = (active_year,)
+    
+    if status_filter:
+        query += " AND e.status = ?"
+        params = (active_year, status_filter)
+        
+    query += " ORDER BY e.date DESC"
+    return fetch_query(query, params)
+
+def update_enrollment_status(enrollment_id, new_status):
+    """Met à jour le statut d'une inscription (Accepté ou Refusé)."""
+    return execute_query("UPDATE enrollments SET status = ? WHERE id = ?", (new_status, enrollment_id))
