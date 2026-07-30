@@ -99,6 +99,7 @@ def main_sidebar():
             menu_options.append("💾 Sauvegarde & Restauration")
             menu_options.append("🏫 Paramètres École")
             menu_options.append("📊 Import / Export Excel")
+            menu_options.append("🗄️ Archivage & Promotion")
             
         # Options globales
         menu_options.append("⚙️ Paramètres")
