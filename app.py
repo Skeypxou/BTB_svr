@@ -13,7 +13,7 @@ if not os.path.exists("database/school.db"):
 
 # --- 2. CONFIGURATION DE LA PAGE STREAMLIT ---
 st.set_page_config(
-    page_title="LNS SCHOOL PRO ENTERPRISE",
+    page_title="BTB SVR",
     page_icon="🏫",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -37,7 +37,7 @@ if 'user_info' not in st.session_state:
 
 # --- 5. PAGE DE CONNEXION ---
 def login_page():
-    st.markdown("<h1 style='text-align: center; color: #1e293b;'>🏫 LNS SCHOOL PRO ENTERPRISE</h1>", unsafe_allow_html=True)
+    st.markdown("<h1 style='text-align: center; color: #1e293b;'>🏫 BTB SVR</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; color: #64748b;'>Veuillez vous connecter pour accéder au système</p>", unsafe_allow_html=True)
     
     col1, col2, col3 = st.columns([1, 2, 1])
@@ -62,7 +62,7 @@ def main_sidebar():
     user_role = st.session_state.user_info['role_name']
     
     with st.sidebar:
-        st.markdown("### 🏫 LNS SCHOOL PRO")
+        st.markdown("### 🏫 BTB SVR")
         st.caption(f"Connecté en tant que : **{user_role}**")
         st.divider()
         
