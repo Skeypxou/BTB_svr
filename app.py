@@ -85,6 +85,8 @@ def main_sidebar():
         # 3. Finances
         if user_role in ['Administrateur', 'Directeur', 'Comptable']:
             menu_options.append("💰 Finances")
+            menu_options.append("🧾 Reçus de Paiement") # <-- AJOUTE CECI
+            
             
         # 4. Années Scolaires et Paramètres Académiques
         if user_role in ['Administrateur', 'Directeur']:
