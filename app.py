@@ -56,6 +56,8 @@ def login_page():
                 else:
                     st.error("Identifiant ou mot de passe incorrect.")
 # --- 6. BARRE DE NAVIGATION (SIDEBAR) ---
+# --- 6. BARRE DE NAVIGATION (SIDEBAR) ---
+# --- 6. BARRE DE NAVIGATION (SIDEBAR) ---
 def main_sidebar():
     user_role = st.session_state.user_info['role_name']
     
@@ -74,19 +76,18 @@ def main_sidebar():
             menu_options.append("👨‍🏫 Enseignants")
             menu_options.append("📋 Inscriptions")
             
-        # 2. Notes, Absences et Bulletins
+        # 2. Notes, Absences, Bulletins, Certificats & Cartes
         if user_role in ['Administrateur', 'Directeur', 'Secrétaire', 'Enseignant']:
             menu_options.append("📝 Notes & Évaluations")
             menu_options.append("🚪 Absences & Retards")
-            menu_options.append("📄 Bulletins PDF") # <-- AJOUTÉ ICI
             menu_options.append("📄 Bulletins PDF")
-            menu_options.append("📜 Certificats PDF") # <-- AJOUTE CECI
+            menu_options.append("📜 Certificats PDF")
+            menu_options.append("🪪 Cartes Scolaires") # <-- AJOUTÉ ICI
             
         # 3. Finances
         if user_role in ['Administrateur', 'Directeur', 'Comptable']:
             menu_options.append("💰 Finances")
-            menu_options.append("🧾 Reçus de Paiement") # <-- AJOUTE CECI
-            
+            menu_options.append("🧾 Reçus de Paiement")
             
         # 4. Années Scolaires et Paramètres Académiques
         if user_role in ['Administrateur', 'Directeur']:
