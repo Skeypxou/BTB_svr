@@ -152,6 +152,10 @@ else:
         from modules.bulletins import show_bulletins
         show_bulletins()
         
+    elif choice == "📜 Certificats PDF":
+        from modules.certificates import show_certificates
+        show_certificates()
+        
     elif choice == "💰 Finances":
         from modules.finances import show_finances
         show_finances()
