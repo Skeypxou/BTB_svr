@@ -435,3 +435,18 @@ def get_student_grades_for_bulletin(student_id, trimester):
         ORDER BY s.name
     """
     return fetch_query(query, (student_id, trimester))
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_student_details_for_certificate(student_id):
+    """Récupère les infos complètes d'un élève pour générer un certificat."""
+    query = """
+        SELECT s.first_name, s.last_name, s.matricule, s.dob, 
+               c.name as class_name, sy.name as year_name
+        FROM students s
+        JOIN enrollments e ON s.id = e.student_id AND e.school_year_id = (SELECT id FROM school_years WHERE is_active = 1)
+        JOIN classes c ON e.class_id = c.id
+        JOIN school_years sy ON e.school_year_id = sy.id
+        WHERE s.id = ?
+    """
+    result = fetch_query(query, (student_id,))
+    return result[0] if result else None
