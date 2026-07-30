@@ -493,3 +493,44 @@ def get_student_for_card(student_id):
     """
     result = fetch_query(query, (student_id,))
     return result[0] if result else None
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def bulk_import_students(df):
+    """Importe une liste d'élèves depuis un DataFrame Pandas (Excel/CSV)."""
+    active_year = get_active_year_id()
+    if not active_year:
+        return 0, "Aucune année scolaire active."
+        
+    success_count = 0
+    errors = []
+    
+    for index, row in df.iterrows():
+        try:
+            # On s'assure que les colonnes existent
+            first_name = str(row.get('Prenom', '')).strip()
+            last_name = str(row.get('Nom', '')).strip()
+            
+            if not first_name or not last_name or first_name == 'nan':
+                continue
+                
+            gender = str(row.get('Sexe', 'M')).strip()
+            dob = str(row.get('DateDeNaissance', '')).strip()
+            phone = str(row.get('Telephone', '')).strip()
+            address = str(row.get('Adresse', '')).strip()
+            
+            matricule = generate_matricule()
+            
+            query = """
+                INSERT INTO students (matricule, first_name, last_name, dob, gender, address, phone, photo_path, school_year_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'default.png', ?)
+            """
+            execute_query(query, (matricule, first_name, last_name, dob, gender, address, phone, active_year))
+            success_count += 1
+        except Exception as e:
+            errors.append(f"Ligne {index+2}: {e}")
+            
+    return success_count, "\n".join(errors)
+
+def get_all_payments_for_export():
+    """Récupère tous les paiements pour l'export Excel."""
+    return get_all_payments() # On réutilise la fonction existante
