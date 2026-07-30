@@ -98,6 +98,7 @@ def main_sidebar():
         if user_role == 'Administrateur':
             menu_options.append("💾 Sauvegarde & Restauration")
             menu_options.append("🏫 Paramètres École")
+            menu_options.append("📊 Import / Export Excel")
             
         # Options globales
         menu_options.append("⚙️ Paramètres")
