@@ -158,6 +158,10 @@ else:
         from modules.certificates import show_certificates
         show_certificates()
         
+    elif choice == "🪪 Cartes Scolaires":
+        from modules.school_cards import show_school_cards
+        show_school_cards()
+        
     elif choice == "💰 Finances":
         from modules.finances import show_finances
         show_finances()
