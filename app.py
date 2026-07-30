@@ -79,6 +79,8 @@ def main_sidebar():
             menu_options.append("📝 Notes & Évaluations")
             menu_options.append("🚪 Absences & Retards")
             menu_options.append("📄 Bulletins PDF") # <-- AJOUTÉ ICI
+            menu_options.append("📄 Bulletins PDF")
+            menu_options.append("📜 Certificats PDF") # <-- AJOUTE CECI
             
         # 3. Finances
         if user_role in ['Administrateur', 'Directeur', 'Comptable']:
