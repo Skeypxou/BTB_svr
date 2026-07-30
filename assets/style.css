@@ -1,4 +1,4 @@
-/* --- LNS SCHOOL PRO ENTERPRISE - THEME PREMIUM --- */
+/* --- BTB SVR - THEME PREMIUM --- */
 
 /* Police d'écriture globale */
 body, div, p, span, input, button {
@@ -11,10 +11,18 @@ section[data-testid="stSidebar"] {
     color: white !important;
 }
 
-/* Liens de navigation dans la sidebar */
+/* Tous les textes, titres et labels dans la Sidebar */
+section[data-testid="stSidebar"] .stMarkdown, 
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] span,
+section[data-testid="stSidebar"] label {
+    color: white !important;
+}
+
+/* Liens de navigation (boutons radio) dans la sidebar */
 section[data-testid="stSidebar"] .stRadio label, 
 section[data-testid="stSidebar"] .stButton button {
-    color: #cbd5e1 !important;
+    color: white !important;
 }
 
 /* Cartes statistiques (KPIs) */
