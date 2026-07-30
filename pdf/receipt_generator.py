@@ -52,7 +52,7 @@ def generate_receipt_pdf(payment):
     
     # --- INFOS PAIEMENT ---
     elements.append(Paragraph(f"Reçu de : <b>{payment['last_name']} {payment['first_name']}</b> ({payment['matricule']})", normal_style))
-    elements.append(Paragraph(f>Objet du paiement : <b>{payment['fee_name']}</b>", normal_style))
+    elements.append(Paragraph(f"Objet du paiement : <b>{payment['fee_name']}</b>", normal_style))
     elements.append(Paragraph(f"Méthode de paiement : <b>{payment['method']}</b>", normal_style))
     elements.append(Spacer(1, 10*mm))
     
