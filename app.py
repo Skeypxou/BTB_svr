@@ -188,6 +188,10 @@ else:
         from modules.school_settings import show_school_settings
         show_school_settings()
         
+    elif choice == "📊 Import / Export Excel":
+        from modules.import_export import show_import_export
+        show_import_export()
+        
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les autres paramètres du système.")
         
