@@ -146,6 +146,9 @@ else:
     elif choice == "🚪 Absences & Retards":
         from modules.attendance import show_attendance
         show_attendance()
+    elif choice == "📄 Bulletins PDF":
+        from modules.bulletins import show_bulletins
+        show_bulletins()
         
     elif choice == "💰 Finances":
         from modules.finances import show_finances
@@ -169,4 +172,5 @@ else:
         
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les autres paramètres du système.")
+        
         
