@@ -465,3 +465,18 @@ def get_student_details_for_certificate(student_id):
     """
     result = fetch_query(query, (student_id,))
     return result[0] if result else None
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def get_payment_details(payment_id):
+    """Récupère les détails d'un paiement spécifique pour générer le reçu."""
+    query = """
+        SELECT p.id, p.payment_date, p.amount_paid, p.method, p.status, 
+               s.first_name, s.last_name, s.matricule,
+               sf.name as fee_name
+        FROM payments p
+        JOIN students s ON p.student_id = s.id
+        JOIN school_fees sf ON p.fee_id = sf.id
+        WHERE p.id = ?
+    """
+    result = fetch_query(query, (payment_id,))
+    return result[0] if result else None
