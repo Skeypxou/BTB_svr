@@ -193,6 +193,10 @@ else:
         from modules.import_export import show_import_export
         show_import_export()
         
+    elif choice == "🗄️ Archivage & Promotion":
+        from modules.archives import show_archives
+        show_archives()
+        
     elif choice == "⚙️ Paramètres":
         st.info("Ici se trouveront les autres paramètres du système.")
         
