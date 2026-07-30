@@ -534,3 +534,46 @@ def bulk_import_students(df):
 def get_all_payments_for_export():
     """Récupère tous les paiements pour l'export Excel."""
     return get_all_payments() # On réutilise la fonction existante
+    # --- AJOUTER À LA FIN DE database/queries.py ---
+
+def close_active_year():
+    """Clôture l'année active (la verrouille)."""
+    active_year = get_active_year_id()
+    if active_year:
+        # On ferme l'année et on la désactive
+        return execute_query("UPDATE school_years SET is_closed = 1, is_active = 0 WHERE id = ?", (active_year,))
+    return False
+
+def promote_students(class_mapping, new_year_id):
+    """
+    Inscrit les élèves dans leurs nouvelles classes pour la nouvelle année.
+    class_mapping est un dictionnaire : {ancienne_classe_id: nouvelle_classe_id}
+    """
+    active_year = get_active_year_id()
+    if not active_year:
+        return 0
+        
+    # Récupérer tous les élèves acceptés de l'année qui se termine
+    students = fetch_query("""
+        SELECT student_id, class_id FROM enrollments 
+        WHERE school_year_id = ? AND status = 'Accepté'
+    """, (active_year,))
+    
+    promoted_count = 0
+    for student in students:
+        old_class_id = student['class_id']
+        new_class_id = class_mapping.get(old_class_id)
+        
+        # Si l'admin a défini une classe suivante pour cette classe
+        if new_class_id:
+            # Vérifier si l'élève n'est pas déjà inscrit dans la nouvelle année
+            existing = fetch_query("SELECT id FROM enrollments WHERE student_id=? AND school_year_id=?", 
+                                   (student['student_id'], new_year_id))
+            if not existing:
+                execute_query("""
+                    INSERT INTO enrollments (student_id, class_id, date, status, school_year_id)
+                    VALUES (?, ?, DATE('now'), 'Accepté', ?)
+                """, (student['student_id'], new_class_id, new_year_id))
+                promoted_count += 1
+                
+    return promoted_count
